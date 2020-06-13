@@ -43,88 +43,10 @@ function armarTabla(autos) {
 
 
     for (var i in autos) {
-        var tr = document.createElement('tr');
 
-        for (var j in autos[i]) {
+        insertarFilaNueva(autos[i]);
 
-
-            tabla.appendChild(tr);
-
-            if (j != 'year') {
-
-                var td = document.createElement('td');
-                text = document.createTextNode(autos[i][j]);
-
-                td.appendChild(text);
-                tr.appendChild(td);
-
-            }
-
-            if (j == 'year') {
-
-                var td = document.createElement('td');
-
-                tr.appendChild(td);
-                var select = createSelect();
-                td.appendChild(select);
-
-
-                // document.getElementById('selectTable').addEventListener('onchange', () => {
-
-
-                // //     // tabla.hidden = true;
-                // //     // setSpinner('show');
-
-                // //     // obtenerDatosFila(tr);
-
-                // });
-
-
-                if (autos[i][j] < 2000 || autos[i][j] > 2020) {
-
-
-                    option = document.createElement("option");
-                    option.setAttribute("value", autos[i][j]);
-
-                    var texto = document.createTextNode(autos[i][j]);
-                    option.appendChild(texto);
-
-                    select.appendChild(option);
-
-                    select.value = autos[i][j];
-
-
-
-                } else {
-
-                    select.value = autos[i][j];
-
-                }
-
-
-            }
-
-
-        }
     }
-
-
-
-    const selectElements = document.querySelectorAll('.selectTable');
-
-    selectElements.forEach(element => {
-
-
-        element.addEventListener('change', (event) => {
-
-
-            setSpinner('show');
-
-            obtenerDatosFila(element.parentNode.parentNode);
-
-        });
-
-    });
 
 
     document.getElementById('agregar').addEventListener('click', () => {
@@ -158,8 +80,6 @@ function obtenerDatosFila(tr) {
     }
 
     modificarAño(nuevoAño);
-
-
 
 }
 
@@ -223,7 +143,6 @@ function crearFormulario() {
 
     autoA.forEach(function (elemento, indice) {
 
-
         var label = document.createElement("label");
         label.style.display = "block";
         var datoLabel = document.createTextNode(elemento);
@@ -232,30 +151,26 @@ function crearFormulario() {
 
         var select = document.createElement('select');
 
-        switch (elemento) {
 
-            case 'Año':
+        if (elemento == 'Año') {
+            var select = createSelect();
+            select.setAttribute('id', 'selectFormulario');
 
-                var select = createSelect();
-                select.setAttribute('id', 'selectFormulario');
+            form.appendChild(select);
 
-                form.appendChild(select);
-                break;
-            default:
-                var dato;
-                dato = document.createElement("input");
-                dato.setAttribute("id", elemento);
-                dato.setAttribute("type", "text");
-                dato.style.display = "block";
-                dato.setAttribute('position', 'fixed');
+        }else{
 
-                dato.placeholder = elemento;
+            dato = document.createElement("input");
+            dato.setAttribute("id", elemento);
+            dato.setAttribute("type", "text");
+            dato.style.display = "block";
+            dato.setAttribute('position', 'fixed');
 
-                form.appendChild(dato);
-                break;
+            dato.placeholder = elemento;
+
+            form.appendChild(dato);
         }
-
-
+       
     });
 
 
@@ -352,7 +267,6 @@ function validarCampos(marca, modelo, año) {
 
     } else {
 
-
         document.getElementById('Marca').style.borderColor = "#7e66b8";
 
     }
@@ -366,7 +280,6 @@ function validarCampos(marca, modelo, año) {
 
     } else {
 
-
         document.getElementById('Modelo').style.borderColor = "#7e66b8";
 
     }
@@ -379,7 +292,6 @@ function validarCampos(marca, modelo, año) {
         retorno = false;
 
     } else {
-
 
         document.getElementById('selectFormulario').style.borderColor = "#7e66b8";
 
@@ -426,12 +338,25 @@ function insertarFilaNueva(datosNuevos) {
     tr.appendChild(td);
     var select = createSelect();
     td.appendChild(select);
-    select.value = datosNuevos.year;
 
+
+    if (datosNuevos.year < 2000) {
+
+        option = document.createElement("option");
+        option.setAttribute("value", datosNuevos.year);
+
+        var texto = document.createTextNode(datosNuevos.year);
+        option.appendChild(texto);
+
+        select.appendChild(option);
+
+
+    }
+    select.value = datosNuevos.year;
 
     tabla.appendChild(tr);
 
-    select.addEventListener('change', (event) => {
+    select.addEventListener('change', function () {
 
         setSpinner('show');
 
@@ -446,10 +371,7 @@ function cambiarFila(nuevoAño) {
 
     document.querySelectorAll('tr').forEach(function (value, index) {
 
-
-
         if (value.children[0].textContent == nuevoAño.id) {
-
 
             value.children[3].children[0].value = nuevoAño.year;
 
@@ -472,9 +394,6 @@ function eliminarFilaDom(jsonNuevo) {
         if (value.children[0].textContent == jsonNuevo.id) {
 
             tabla.removeChild(value);
-
-
-
         }
 
     });
@@ -487,7 +406,6 @@ function createSelect() {
     var select = document.createElement('select');
     select.setAttribute('class', "selectTable");
 
-
     for (var i = 2000; i <= 2020; i++) {
 
         option = document.createElement("option");
@@ -497,8 +415,6 @@ function createSelect() {
         option.appendChild(texto);
 
         select.appendChild(option);
-
-
 
     }
 
